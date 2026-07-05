@@ -1,9 +1,12 @@
 #include <iostream>
 #include <cassert>
 #include <memory>
+#include <cstdio>
 #include "database/db.hpp"
 #include "agents/agent_bridge.hpp"
 #include "models/models.hpp"
+
+static const char* TEST_DB_PATH = "test_studymate.db";
 
 void test_database_operations() {
     std::cout << "[Test 1/5] Running SQLite Database Plan Tests..." << std::endl;
@@ -137,8 +140,13 @@ int main() {
         test_agent_traces_and_limits();
         test_models_json_serialization();
         test_agent_bridge_fallbacks();
+
+        // Clean up test database file to prevent test pollution
+        std::remove(TEST_DB_PATH);
+
         std::cout << "\nALL C++ BACKEND TESTS PASSED SUCCESSFULLY! (100% Pass Rate)\n" << std::endl;
     } catch (const std::exception& e) {
+        std::remove(TEST_DB_PATH);
         std::cerr << "\n[TEST FAILED]: " << e.what() << std::endl;
         return 1;
     }

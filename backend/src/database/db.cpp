@@ -110,7 +110,9 @@ std::vector<StudyPlan> Database::get_all_study_plans() {
                     json j = json::parse(json_str);
                     StudyPlan plan = j.get<StudyPlan>();
                     plans.push_back(plan);
-                } catch (...) {}
+                } catch (const std::exception& e) {
+                    std::cerr << "[Database] Failed to parse study plan JSON: " << e.what() << std::endl;
+                }
             }
         }
         sqlite3_finalize(stmt);
@@ -131,7 +133,9 @@ std::unique_ptr<StudyPlan> Database::get_study_plan(const std::string& plan_id) 
                     auto plan = std::make_unique<StudyPlan>(j.get<StudyPlan>());
                     sqlite3_finalize(stmt);
                     return plan;
-                } catch (...) {}
+                } catch (const std::exception& e) {
+                    std::cerr << "[Database] Failed to parse study plan JSON for id '" << plan_id << "': " << e.what() << std::endl;
+                }
             }
         }
         sqlite3_finalize(stmt);

@@ -1,10 +1,7 @@
 const { app, BrowserWindow, Menu, shell } = require('electron');
 const path = require('path');
-const { spawn } = require('child_process');
 
 let mainWindow;
-let cppProcess;
-let pythonProcess;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -28,11 +25,11 @@ function createWindow() {
   // Load Next.js web app (or local fallback index)
   const appUrl = process.env.STUDYMATE_URL || 'http://localhost:3000';
   mainWindow.loadURL(appUrl).catch(() => {
-    // If Next.js dev server is starting, retry loading
+    // If Next.js dev server is starting, retry loading after a short delay
     setTimeout(() => mainWindow.loadURL(appUrl), 2000);
   });
 
-  // Open external links in default Windows browser
+  // Open external links in default Windows browser (security sandbox)
   mainWindow.webContents.setWindowOpenHandler(({ url }) => {
     shell.openExternal(url);
     return { action: 'deny' };
@@ -43,12 +40,7 @@ function createWindow() {
   });
 }
 
-function startBackendServices() {
-  console.log('[Desktop] Launching StudyMate background services...');
-}
-
 app.whenReady().then(() => {
-  startBackendServices();
   createWindow();
 
   app.on('activate', () => {
@@ -58,8 +50,6 @@ app.whenReady().then(() => {
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
-    if (cppProcess) cppProcess.kill();
-    if (pythonProcess) pythonProcess.kill();
     app.quit();
   }
 });
