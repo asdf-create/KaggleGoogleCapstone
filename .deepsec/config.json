@@ -1,0 +1,31 @@
+{
+  "$schema": "https://deepsec.vercel.app/schema.json",
+  "name": "StudyMate AI Security Audit Configuration",
+  "version": "1.0.0",
+  "rules": {
+    "secret_exposure": {
+      "enabled": true,
+      "severity": "CRITICAL",
+      "ignore_patterns": [".env.example", "mock_key_for_testing"]
+    },
+    "sql_injection": {
+      "enabled": true,
+      "severity": "HIGH",
+      "enforce_prepared_statements": true
+    },
+    "input_validation": {
+      "enabled": true,
+      "severity": "MEDIUM",
+      "check_json_exceptions": true
+    },
+    "cors_and_transport": {
+      "enabled": true,
+      "severity": "MEDIUM"
+    }
+  },
+  "exclude": [
+    "node_modules/**",
+    "build/**",
+    ".git/**"
+  ]
+}

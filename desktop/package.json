@@ -1,0 +1,16 @@
+{
+  "name": "studymate-desktop",
+  "version": "1.0.0",
+  "description": "StudyMate AI - Native Windows Desktop Application",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build:win": "electron-builder --win"
+  },
+  "dependencies": {
+    "electron": "^29.1.0"
+  },
+  "devDependencies": {
+    "electron-builder": "^24.13.3"
+  }
+}
