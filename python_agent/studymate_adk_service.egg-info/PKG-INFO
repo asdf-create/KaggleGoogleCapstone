@@ -1,0 +1,25 @@
+Metadata-Version: 2.4
+Name: studymate-adk-service
+Version: 0.1.0
+Summary: StudyMate AI - Google ADK Agent Microservice using uv
+Requires-Python: >=3.11
+Description-Content-Type: text/markdown
+Requires-Dist: fastapi>=0.110.0
+Requires-Dist: uvicorn>=0.28.0
+Requires-Dist: pydantic>=2.6.0
+Requires-Dist: google-genai>=0.1.1
+Requires-Dist: requests>=2.31.0
+Requires-Dist: pytest>=8.0.0
+Requires-Dist: python-dotenv>=1.0.1
+
+# StudyMate AI - Python ADK Microservice
+
+Microservice powered by **Google ADK (`google-genai`)** and **Gemini 2.5 Flash / Pro** managing multi-agent workflows.
+
+## Agents
+- **CoordinatorAgent**
+- **PlannerAgent**
+- **TutorAgent**
+- **ResearchAgent** (with YouTube video & transcript search)
+- **QuizAgent**
+- **ProgressAgent**

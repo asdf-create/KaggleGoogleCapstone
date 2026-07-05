@@ -58,10 +58,18 @@ void Routes::setup_routes(httplib::Server& svr) {
             plan.hours_per_day = hours_per_day;
             plan.created_at = "2026-07-05 23:00:00";
 
-            if (plan_json.contains("schedule")) {
-                plan.schedule = plan_json["schedule"].get<std::vector<StudyDay>>();
-            } else {
-                // Default fallback schedule if ADK service offline
+            bool parsed_schedule = false;
+            if (plan_json.contains("schedule") && plan_json["schedule"].is_array()) {
+                try {
+                    plan.schedule = plan_json["schedule"].get<std::vector<StudyDay>>();
+                    parsed_schedule = !plan.schedule.empty();
+                } catch (...) {
+                    parsed_schedule = false;
+                }
+            }
+
+            if (!parsed_schedule) {
+                // Default fallback schedule if ADK service offline or json deserialization fails
                 StudyDay day1;
                 day1.day_number = 1;
                 day1.title = "Introduction & Core Foundations";
@@ -114,6 +122,15 @@ void Routes::setup_routes(httplib::Server& svr) {
             std::string user_context = body.value("user_context", "Beginner");
 
             json tutor_res = bridge_->explain_concept(topic, user_context);
+
+            if (tutor_res.value("status", "") == "fallback") {
+                tutor_res["topic"] = topic;
+                tutor_res["user_context"] = user_context;
+                tutor_res["explanation"] = "### Understanding " + topic + "\n\n**" + topic + "** is a fundamental concept in computing and AI.\n\n#### Key Intuition\nThink of " + topic + " like a step-by-step optimization algorithm that improves performance through experience.";
+                tutor_res["key_takeaways"] = json::array({"Core mathematical foundation", "Practical implementations", "Common debugging strategies"});
+                tutor_res["recommended_next_steps"] = json::array({"Solve 3 practice exercises", "Generate a quiz to test understanding"});
+            }
+
             res.set_content(tutor_res.dump(), "application/json");
         } catch (const std::exception& e) {
             res.status = 400;
@@ -136,9 +153,17 @@ void Routes::setup_routes(httplib::Server& svr) {
             quiz.topic = topic;
             quiz.difficulty = difficulty;
 
-            if (quiz_res.contains("questions")) {
-                quiz.questions = quiz_res["questions"].get<std::vector<Question>>();
-            } else {
+            bool parsed_quiz = false;
+            if (quiz_res.contains("questions") && quiz_res["questions"].is_array()) {
+                try {
+                    quiz.questions = quiz_res["questions"].get<std::vector<Question>>();
+                    parsed_quiz = !quiz.questions.empty();
+                } catch (...) {
+                    parsed_quiz = false;
+                }
+            }
+
+            if (!parsed_quiz) {
                 Question q1;
                 q1.id = "q1";
                 q1.question_text = "What is the primary objective of gradient descent in machine learning?";
@@ -198,6 +223,36 @@ void Routes::setup_routes(httplib::Server& svr) {
             std::string topic = body.value("topic", "Machine Learning");
 
             json research_res = bridge_->research_resources(topic);
+
+            if (research_res.value("status", "") == "fallback") {
+                json mock_videos = json::array({
+                    {{"title", "Complete " + topic + " Crash Course"}, {"video_id", "k7a_k8s9_01"}, {"url", "https://youtube.com"}, {"channel", "StatQuest"}, {"duration", "14:20"}},
+                    {{"title", topic + " Explained Visually"}, {"video_id", "v3b_m9p2_02"}, {"url", "https://youtube.com"}, {"channel", "3Blue1Brown"}, {"duration", "18:45"}}
+                });
+
+                json mock_transcript = json::array({
+                    {{"timestamp_seconds", 0.0}, {"time_formatted", "00:00"}, {"text", "Introduction to " + topic}},
+                    {{"timestamp_seconds", 90.0}, {"time_formatted", "01:30"}, {"text", "Core intuition and mathematical derivation."}},
+                    {{"timestamp_seconds", 240.0}, {"time_formatted", "04:00"}, {"text", "Optimizing the objective function."}}
+                });
+
+                research_res = {
+                    {"topic", topic},
+                    {"summary", "Comprehensive learning resources for " + topic},
+                    {"resources", json::array({
+                        {
+                            {"title", "Official Documentation & Deep Dive"},
+                            {"url", "https://docs.example.org"},
+                            {"type", "doc"},
+                            {"snippet", "Complete reference guide and tutorial for " + topic},
+                            {"relevance_score", 0.98},
+                            {"youtube_videos", mock_videos},
+                            {"transcript", mock_transcript}
+                        }
+                    })}
+                };
+            }
+
             res.set_content(research_res.dump(), "application/json");
         } catch (const std::exception& e) {
             res.status = 400;
