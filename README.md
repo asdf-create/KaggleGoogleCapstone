@@ -51,7 +51,7 @@ graph TD
 
     subgraph External ["Tools & APIs"]
         Gemini[Google AI Studio - Gemini 2.5 Flash / Pro]
-        MCP[MCP Servers: Filesystem | WebSearch | GitHub | Notes]
+        MCP["MCP Servers: Filesystem / WebSearch / GitHub / Notes"]
     end
 
     User --> Dashboard
