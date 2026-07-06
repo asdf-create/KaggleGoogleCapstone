@@ -29,12 +29,12 @@ export const TutorView: React.FC<TutorViewProps> = ({ selectedTopic }) => {
   return (
     <div className="space-y-6">
       {/* Search Header */}
-      <div className="glass-panel p-6 rounded-2xl border border-surfaceBorder flex flex-col md:flex-row gap-4 items-center justify-between">
+      <div className="liquid-glass p-6 rounded-3xl border border-slate-200 flex flex-col md:flex-row gap-4 items-center justify-between">
         <div>
-          <h2 className="text-xl font-bold text-white flex items-center gap-2">
+          <h2 className="text-xl font-bold text-slate-900 flex items-center gap-2">
             <BookOpen className="w-5 h-5 text-brandPurple" /> AI Tutor & Personalized Concept Explainer
           </h2>
-          <p className="text-xs text-gray-400 mt-1">
+          <p className="text-xs text-slate-600 mt-1">
             Get structured explanations adapted to your background, complete with key takeaways and practice steps.
           </p>
         </div>
@@ -43,7 +43,7 @@ export const TutorView: React.FC<TutorViewProps> = ({ selectedTopic }) => {
           <select
             value={userContext}
             onChange={(e) => setUserContext(e.target.value)}
-            className="bg-background border border-surfaceBorder text-xs text-gray-300 rounded-xl px-3 py-2 focus:outline-none focus:border-brandPurple"
+            className="liquid-glass-input text-xs font-semibold text-slate-700 rounded-xl px-3 py-2.5 focus:outline-none"
           >
             <option value="Beginner">Beginner Level</option>
             <option value="Intermediate">Intermediate Level</option>
@@ -55,13 +55,13 @@ export const TutorView: React.FC<TutorViewProps> = ({ selectedTopic }) => {
             value={topic}
             onChange={(e) => setTopic(e.target.value)}
             placeholder="Topic to learn..."
-            className="bg-background border border-surfaceBorder rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-brandPurple w-full md:w-64"
+            className="liquid-glass-input rounded-xl px-4 py-2.5 text-xs text-slate-900 font-medium w-full md:w-64"
           />
 
           <button
             onClick={handleExplain}
             disabled={loading}
-            className="flex items-center gap-2 bg-gradient-to-r from-brandPurple to-brandBlue text-white px-5 py-2 rounded-xl text-sm font-semibold hover:opacity-90 transition-all shadow-lg shadow-brandPurple/20 whitespace-nowrap"
+            className="flex items-center gap-2 bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-5 py-2.5 rounded-xl text-xs font-bold shadow-md shadow-purple-600/20 hover:opacity-95 transition-all whitespace-nowrap"
           >
             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
             Explain
@@ -72,31 +72,31 @@ export const TutorView: React.FC<TutorViewProps> = ({ selectedTopic }) => {
       {/* Explanation Results */}
       {result && (
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          <div className="lg:col-span-8 glass-panel p-6 rounded-2xl border border-surfaceBorder space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-surfaceBorder">
-              <h3 className="text-lg font-bold text-white flex items-center gap-2">
+          <div className="lg:col-span-8 liquid-glass p-6 rounded-3xl space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-200">
+              <h3 className="text-lg font-bold text-slate-900 flex items-center gap-2">
                 <Sparkles className="w-4 h-4 text-brandCyan" /> {result.topic}
               </h3>
-              <span className="text-xs bg-brandPurple/20 text-brandPurple px-2.5 py-1 rounded-md border border-brandPurple/30 font-mono">
+              <span className="text-xs bg-purple-100 text-purple-700 px-3 py-1 rounded-full border border-purple-200 font-mono font-semibold">
                 {result.user_context} Mode
               </span>
             </div>
 
-            <div className="prose prose-invert text-sm text-gray-300 whitespace-pre-line leading-relaxed">
+            <div className="prose text-sm text-slate-700 whitespace-pre-line leading-relaxed font-normal">
               {result.explanation}
             </div>
           </div>
 
           <div className="lg:col-span-4 space-y-6">
             {/* Key Takeaways */}
-            <div className="glass-panel p-5 rounded-2xl border border-surfaceBorder space-y-3">
-              <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider flex items-center gap-2">
-                <Lightbulb className="w-4 h-4 text-amber-400" /> Key Takeaways
+            <div className="liquid-glass p-5 rounded-3xl space-y-3">
+              <h4 className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-2">
+                <Lightbulb className="w-4 h-4 text-amber-500" /> Key Takeaways
               </h4>
               <div className="space-y-2">
                 {result.key_takeaways?.map((item: string, i: number) => (
-                  <div key={i} className="flex items-start gap-2 text-xs text-gray-200">
-                    <CheckCircle className="w-3.5 h-3.5 text-brandEmerald mt-0.5 shrink-0" />
+                  <div key={i} className="flex items-start gap-2.5 text-xs text-slate-700 bg-white/70 p-2.5 rounded-2xl border border-slate-200">
+                    <CheckCircle className="w-4 h-4 text-emerald-600 mt-0.5 shrink-0" />
                     <span>{item}</span>
                   </div>
                 ))}
@@ -104,11 +104,11 @@ export const TutorView: React.FC<TutorViewProps> = ({ selectedTopic }) => {
             </div>
 
             {/* Recommended Next Steps */}
-            <div className="glass-panel p-5 rounded-2xl border border-surfaceBorder space-y-3">
-              <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider">Next Recommended Steps</h4>
+            <div className="liquid-glass p-5 rounded-3xl space-y-3">
+              <h4 className="text-xs font-bold text-slate-700 uppercase tracking-wider">Next Recommended Steps</h4>
               <div className="space-y-2">
                 {result.recommended_next_steps?.map((step: string, i: number) => (
-                  <div key={i} className="p-2.5 rounded-xl bg-surface/50 border border-surfaceBorder text-xs text-gray-300 flex items-center justify-between">
+                  <div key={i} className="p-3 rounded-2xl bg-white border border-slate-200 text-xs font-semibold text-slate-700 flex items-center justify-between hover:border-blue-400 transition-all">
                     <span>{step}</span>
                     <ArrowRight className="w-3.5 h-3.5 text-brandBlue" />
                   </div>
